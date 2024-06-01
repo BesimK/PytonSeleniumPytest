@@ -6,7 +6,7 @@ class ConfigurationManager:
 
     @classmethod
     def load_config(cls, config_file='configuration.properties'):
-        project_path = os.path.dirname(os.getcwd())
+        project_path = os.getcwd()
         config_path = os.path.join(project_path, config_file)
         if not cls._config:
             with open(config_path, 'r') as config_file:
