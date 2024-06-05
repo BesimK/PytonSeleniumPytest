@@ -1,21 +1,38 @@
+import allure
+from datetime import datetime
+
+from Main.Pages.BasePage import BasePage
 from Main.Utilities.DriverManager import DriverManager
-from allure_behave.hooks import allure_report
-
-
-def after_scenario(context, scenario):
-    allure_report()
-    DriverManager.quit_driver()
-    print(f"after_scenario: Finished scenario: {scenario.name}")
+from Main.Utilities.Pages import Pages
 
 
 def before_all(context):
-    DriverManager.get_driver()
-    print("before_all: Running once before all tests")
+    browser = context.config.userdata.get('Browser', 'chrome')
+    DriverManager.get_driver(browser)
+    context.pages = Pages()
+    print("----------------------------Tests Has Been Started----------------------------")
+
+
+def before_scenario(context, scenario):
+    browser = context.config.userdata.get('Browser', 'chrome')
+    DriverManager.get_driver(browser)
+    print(f"before_scenario: Starting scenario: {scenario.name}")
+
+
+def after_scenario(context, scenario):
+    browser = context.config.userdata.get('Browser', 'chrome')
+    if scenario.status == 'failed':
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        screenshot_name = f"screenshot_{browser}_{timestamp}.png"
+        screenshot = DriverManager.get_driver().get_screenshot_as_png()
+        allure.attach(screenshot, name=screenshot_name, attachment_type=allure.attachment_type.PNG)
+    DriverManager.quit_driver()
+    print(f"----------------------------Scenario:{scenario.name} Has Been Ended ----------------------------")
 
 
 def after_all(context):
     DriverManager.quit_driver()
-    print("after_all: Running once after all tests")
+    print("----------------------------Tests Has Been Ended----------------------------")
 
 # def before_feature(context, feature):
 #     """
@@ -29,13 +46,6 @@ def after_all(context):
 #     Runs after each feature.
 #     """
 #     print(f"after_feature: Finished feature: {feature.name}")
-#
-#
-# def before_scenario(context, scenario):
-#     """
-#     Runs before each scenario.
-#     """
-#     print(f"before_scenario: Starting scenario: {scenario.name}")
 #
 #
 #
