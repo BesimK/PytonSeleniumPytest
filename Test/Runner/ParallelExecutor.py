@@ -8,8 +8,10 @@ def run_tests(browser):
     env = os.environ.copy()
     env['BROWSER'] = browser
     allure_dir = f"Reports/{browser}/{browser}_report"
-    subprocess.run(["behave", f"-D Browser = {browser}", "-o", allure_dir],
-                   env=env)
+    subprocess.run(
+        ["behave", f"-D Browser = {browser}", "--tags=@wiki ", "-f allure_behave.formatter:AllureFormatter", "-o",
+         allure_dir],
+        env=env)
 
 
 browsers = ["chrome", "firefox", "edge"]

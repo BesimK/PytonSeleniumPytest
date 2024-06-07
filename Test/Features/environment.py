@@ -1,7 +1,10 @@
+import time
+
 import allure
 from datetime import datetime
-
+from allure_combine import combine_allure
 from Main.Pages.BasePage import BasePage
+from Main.Utilities import Closer
 from Main.Utilities.DriverManager import DriverManager
 from Main.Utilities.Pages import Pages
 
@@ -32,6 +35,8 @@ def after_scenario(context, scenario):
 
 def after_all(context):
     DriverManager.quit_driver()
+    driver = context.config.userdata.get('Browser', 'chrome')
+    Closer.generate_report(driver)
     print("----------------------------Tests Has Been Ended----------------------------")
 
 # def before_feature(context, feature):
