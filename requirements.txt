@@ -7,3 +7,5 @@ requests==2.32.2
 allure-combine==1.0.11
 python-telegram-bot==21.2
 xlib==0.21
+pillow==10.3.0
+PyAutoGUI==0.9.54

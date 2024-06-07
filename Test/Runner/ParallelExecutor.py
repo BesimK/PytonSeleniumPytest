@@ -9,12 +9,15 @@ def run_tests(browser):
     env['BROWSER'] = browser
     allure_dir = f"Reports/{browser}/{browser}_report"
     subprocess.run(
-        ["behave", f"-D Browser = {browser}", "--tags=@wiki ", "-f allure_behave.formatter:AllureFormatter", "-o",
+        ["behave", f"-D Browser = {browser}", "-f allure_behave.formatter:AllureFormatter", "-o",
          allure_dir],
         env=env)
 
 
-browsers = ["chrome", "firefox", "edge"]
+if os.name == 'nt':  # Windows
+    browsers = ["chrome", "firefox", "edge"]
+else:  # Non-Windows (e.g., macOS, Linux)
+    browsers = ["chrome", "firefox", "safari"]
 
 with ThreadPoolExecutor(max_workers=len(browsers)) as executor:
     executor.map(run_tests, browsers)
